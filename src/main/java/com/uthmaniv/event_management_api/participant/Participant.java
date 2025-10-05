@@ -3,9 +3,13 @@ package com.uthmaniv.event_management_api.participant;
 import com.uthmaniv.event_management_api.event.Event;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Participant implements Serializable {
@@ -14,66 +18,65 @@ public class Participant implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
+    @NotBlank
     private String firstName;
 
-    @Column
+    @Column(nullable = false)
+    @NotBlank
     private String lastName;
 
-    @Column
+    @Column(unique = true)
+    @NotBlank
     @Email
     private String email;
 
-    @Column
-    private long phoneNumber;
+    @Column(name = "phone_no", unique = true)
+    @NotNull
+    private Long phoneNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @ManyToMany(mappedBy = "participants")
+    private Set<Event> events = new HashSet<>();
 
-    public Participant(String firstName, String lastName, String email, long phoneNumber) {
+    public Participant(String firstName, String lastName, String email, Long phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    private Participant() {}
+    public Participant() {}
 
     public String getFirstName() {
         return firstName;
     }
 
-    public Participant setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
-        return this;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public Participant setLastName(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
-        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public Participant setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
-        return this;
     }
 
-    public long getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public Participant setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
-        return this;
     }
 
     @Override
