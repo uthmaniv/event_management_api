@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,11 +18,11 @@ public class Event implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true, nullable = false)
     @NotBlank
     private String title;
 
-    @Column
+    @Column(nullable = false)
     @NotBlank
     private String description;
 
@@ -31,8 +33,13 @@ public class Event implements Serializable {
     @Column
     private LocalDateTime dateTime;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Participant> participants;
+    @ManyToMany
+    @JoinTable(
+            name = "event_participant",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_id")
+    )
+    private Set<Participant> participants = new HashSet<>();
 
     public Event(String title, String description, String location, LocalDateTime dateTime) {
         this.title = title;
@@ -47,36 +54,32 @@ public class Event implements Serializable {
         return title;
     }
 
-    public Event setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Event setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public Event setLocation(String location) {
+    public void setLocation(String location) {
         this.location = location;
-        return this;
     }
 
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public Event setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
-        return this;
     }
 
     public Set<Participant> getParticipants() {
