@@ -65,7 +65,7 @@ public class EventController {
 
     @PostMapping("/add-participant/upload")
     public ResponseEntity<String> uploadParticipants(@RequestParam String title,
-                                                     @RequestPart MultipartFile file) throws IOException {
+                                                     @RequestParam MultipartFile file) throws IOException {
         eventService.addParticipantsFromFile(title, file);
         return ResponseEntity.ok("Participants uploaded successfully");
     }
@@ -94,7 +94,7 @@ public class EventController {
     @PatchMapping("/update/location")
     public ResponseEntity<Void> updateLocation(@RequestParam String title,
                                                @RequestParam String location) {
-        eventService.updateEventDescription(title, location);
+        eventService.updateEventLocation(title, location);
         return ResponseEntity.noContent().build();
     }
 
