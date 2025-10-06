@@ -2,11 +2,13 @@ package com.uthmaniv.event_management_api.event;
 
 import com.uthmaniv.event_management_api.participant.Participant;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,18 +21,23 @@ public class Event implements Serializable {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @NotBlank
+    @NotBlank(message = "Title is required")
+    @Size(max = 255, message = "Title must not exceed 255 characters")
     private String title;
 
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message = "Description is required")
+    @Size(max = 255, message = "Description must not exceed 255 characters")
     private String description;
 
     @Column
-    @NotBlank
+    @NotBlank(message = "Location is required")
+    @Size(max = 255, message = "Description must not exceed 255 characters")
     private String location;
 
     @Column
+    @NotNull(message = "Date and time are required")
+    @FutureOrPresent(message = "Event date must be in the present or future")
     private LocalDateTime dateTime;
 
     @ManyToMany

@@ -19,20 +19,20 @@ public class Participant implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message = "First name is required")
     private String firstName;
 
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message = "Last name is required")
     private String lastName;
 
     @Column(unique = true)
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
 
     @Column(name = "phone_no", unique = true)
-    @NotNull
+    @NotNull(message = "Phone number is required")
     private Long phoneNumber;
 
     @ManyToMany(mappedBy = "participants")
@@ -83,7 +83,7 @@ public class Participant implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Participant that = (Participant) o;
-        return getPhoneNumber() == that.getPhoneNumber() && Objects.equals(id, that.id) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail());
+        return Objects.equals(getPhoneNumber(), that.getPhoneNumber()) && Objects.equals(id, that.id) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail());
     }
 
     @Override
