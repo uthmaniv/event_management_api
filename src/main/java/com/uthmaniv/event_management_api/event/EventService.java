@@ -128,7 +128,9 @@ public class EventService {
         Event event = eventRepository.findByTitle(eventTitle).orElseThrow(() -> new EventNotFoundException("Event not found"));
         List<Participant> participants = participantMapper.parseFromCsv(participantsFile);
 
+        participantRepository.saveAll(participants);
         event.getParticipants().addAll(participants);
+        eventRepository.save(event);
     }
 
     public List<ParticipantDto> getEventParticipants (String eventTitle) {
