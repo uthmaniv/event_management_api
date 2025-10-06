@@ -3,6 +3,7 @@ package com.uthmaniv.event_management_api.event;
 import com.uthmaniv.event_management_api.participant.ParticipantDto;
 import com.uthmaniv.event_management_api.util.ApiSuccess;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,7 +77,7 @@ public class EventController {
             description = "Create new Event"
     )
     @PostMapping("/add")
-    public ResponseEntity<Void> addEvent(@RequestBody EventDto dto) {
+    public ResponseEntity<Void> addEvent(@Valid  @RequestBody EventDto dto) {
         eventService.createEvent(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -86,7 +87,7 @@ public class EventController {
     )
     @PostMapping("/add-participant")
     public ResponseEntity<Void> addSingleParticipant(@RequestParam String title,
-                                                     @RequestBody ParticipantDto dto) {
+                                                     @Valid @RequestBody ParticipantDto dto) {
         eventService.addSingleParticipant(title,dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -107,7 +108,7 @@ public class EventController {
     )
     @PutMapping("/update")
     public ResponseEntity<Void> updateEvent(@RequestParam String title,
-                                            @RequestBody EventDto dto) {
+                                            @Valid @RequestBody EventDto dto) {
         eventService.updateEvent(title, dto);
         return ResponseEntity.noContent().build();
     }
