@@ -49,11 +49,11 @@ public class ParticipantMapper {
             while ((line = reader.readLine()) != null) {
                 String[] csvArray = line.split(",");
 
-                if (csvArray.length == 4) {
-                    String firstName = csvArray[0].trim();
-                    String lastName = csvArray[1].trim();
-                    String email = csvArray[2].trim();
-                    Long phone = Long.parseLong(csvArray[3].trim());
+                if (csvArray.length >= 5) {
+                    String firstName = csvArray[1].trim();
+                    String lastName = csvArray[2].trim();
+                    String email = csvArray[3].trim();
+                    Long phone = Long.valueOf(csvArray[4].trim());
 
                     Participant participant = new Participant(firstName,lastName, email, phone);
                     participants.add(participant);
