@@ -37,7 +37,7 @@ public class EventController {
             description = "Search event by title",
             summary = "Retrieves event for a given title"
     )
-    @GetMapping("/search/title")
+    @GetMapping("/title")
     public ResponseEntity<ApiSuccess> getByTitle(@RequestParam String title) {
         return ResponseEntity
                 .ok(new ApiSuccess("success", eventService.findByTitle(title)));
@@ -47,7 +47,7 @@ public class EventController {
             description = "Search event by description",
             summary = "Retrieves event for a given description"
     )
-    @GetMapping("/search/description")
+    @GetMapping("/description")
     public ResponseEntity<ApiSuccess> getByDescription(@RequestParam String description) {
         return ResponseEntity
                 .ok(new ApiSuccess("Success", eventService.findByDescription(description)));
@@ -57,7 +57,7 @@ public class EventController {
             description = "Search event by location",
             summary = "Retrieves event for a given location"
     )
-    @GetMapping("/search/location")
+    @GetMapping("/location")
     public ResponseEntity<ApiSuccess> getByLocation(@RequestParam String location) {
         return ResponseEntity
                 .ok(new ApiSuccess("Success", eventService.findByLocation(location)));
@@ -68,9 +68,9 @@ public class EventController {
             summary = "Retrieves all registered participant of a given event"
     )
     @GetMapping("/participants")
-    public ResponseEntity<ApiSuccess> getParticipants(@RequestParam String title) {
+    public ResponseEntity<ApiSuccess> getParticipants(@RequestParam long id) {
         return ResponseEntity
-                .ok(new ApiSuccess("Success", eventService.getEventParticipants(title)));
+                .ok(new ApiSuccess("Success", eventService.getEventParticipants(id)));
     }
 
     @Operation(
@@ -85,10 +85,10 @@ public class EventController {
     @Operation(
             description = "Register a participant to an event"
     )
-    @PostMapping("/add-participant")
-    public ResponseEntity<Void> addSingleParticipant(@RequestParam String title,
+    @PostMapping("/participants/add")
+    public ResponseEntity<Void> addSingleParticipant(@RequestParam long id,
                                                      @Valid @RequestBody ParticipantDto dto) {
-        eventService.addSingleParticipant(title,dto);
+        eventService.addSingleParticipant(id,dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -96,10 +96,10 @@ public class EventController {
             description = "Register multiple participants",
             summary = "Uploads a csv containing list of participants to be registered to an event"
     )
-    @PostMapping("/add-participant/upload")
-    public ResponseEntity<String> uploadParticipants(@RequestParam String title,
+    @PostMapping("/participants/upload")
+    public ResponseEntity<String> uploadParticipants(@RequestParam long id,
                                                      @RequestParam MultipartFile file) throws IOException {
-        eventService.addParticipantsFromFile(title, file);
+        eventService.addParticipantsFromFile(id, file);
         return ResponseEntity.ok("Participants uploaded successfully");
     }
 
@@ -107,58 +107,58 @@ public class EventController {
             description = "Update Event"
     )
     @PutMapping("/update")
-    public ResponseEntity<Void> updateEvent(@RequestParam String title,
+    public ResponseEntity<Void> updateEvent(@RequestParam long id,
                                             @Valid @RequestBody EventDto dto) {
-        eventService.updateEvent(title, dto);
+        eventService.updateEvent(id, dto);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event title"
     )
-    @PatchMapping("/update/title")
-    public ResponseEntity<Void> updateTitle(@RequestParam String oldTitle,
+    @PatchMapping("/title")
+    public ResponseEntity<Void> updateTitle(@RequestParam long id,
                                             @RequestParam String newTitle) {
-        eventService.updateTitle(oldTitle, newTitle);
+        eventService.updateTitle(id, newTitle);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event description"
     )
-    @PatchMapping("/update/description")
-    public ResponseEntity<Void> updateDescription(@RequestParam String title,
+    @PatchMapping("/description")
+    public ResponseEntity<Void> updateDescription(@RequestParam long id,
                                                   @RequestParam String description) {
-        eventService.updateEventDescription(title, description);
+        eventService.updateEventDescription(id, description);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event location"
     )
-    @PatchMapping("/update/location")
-    public ResponseEntity<Void> updateLocation(@RequestParam String title,
+    @PatchMapping("/location")
+    public ResponseEntity<Void> updateLocation(@RequestParam long id,
                                                @RequestParam String location) {
-        eventService.updateEventLocation(title, location);
+        eventService.updateEventLocation(id, location);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event time and date"
     )
-    @PatchMapping("/update/date-time")
-    public ResponseEntity<Void> updateTimeStamp(@RequestParam String title,
+    @PatchMapping("/date-time")
+    public ResponseEntity<Void> updateTimeStamp(@RequestParam long id,
                                                 @RequestParam LocalDateTime dateTime) {
-        eventService.updateEventDateTime(title,dateTime);
+        eventService.updateEventDateTime(id,dateTime);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Delete event"
     )
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteEvent(@RequestParam String title) {
-        eventService.deleteEvent(title);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteEvent(@RequestParam long id) {
+        eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 }
