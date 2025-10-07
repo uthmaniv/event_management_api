@@ -39,8 +39,8 @@ public class EventService {
         eventRepository.save(eventMapper.toEntity(dto));
     }
 
-    public void updateEvent(String title, EventDto dto) {
-        Event existingEvent = eventRepository.findByTitle(title)
+    public void updateEvent(long id, EventDto dto) {
+        Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
         existingEvent.setTitle(dto.title());
         existingEvent.setDescription(dto.description());
@@ -51,37 +51,38 @@ public class EventService {
         eventMapper.toDto(existingEvent);
     }
 
-    public void updateEventDescription(String title, String description) {
-        Event event = eventRepository.findByTitle(title)
+    public void updateEventDescription(long id, String description) {
+        Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
         event.setDescription(description);
         eventRepository.save(event);
     }
 
-    public void updateEventLocation(String title, String location) {
-        Event event = eventRepository.findByTitle(title)
+    public void updateEventLocation(long id, String location) {
+        Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
         event.setLocation(location);
         eventRepository.save(event);
     }
 
-    public void updateEventDateTime(String title, LocalDateTime dateTime) {
-        Event event = eventRepository.findByTitle(title)
+    public void updateEventDateTime(long id, LocalDateTime dateTime) {
+        Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
         event.setDateTime(dateTime);
         eventRepository.save(event);
     }
 
-    public void updateTitle(String oldTitle, String newTitle) {
-        Event event = eventRepository.findByTitle(oldTitle)
+    public void updateTitle(long id, String newTitle) {
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() ->  new EventNotFoundException("Event not found"));
         event.setTitle(newTitle);
 
         eventRepository.save(event);
     }
 
-    public void deleteEvent(String title) {
-        Event existingEvent = eventRepository.findByTitle(title).orElseThrow(() -> new EventNotFoundException("Event not found"));
+    public void deleteEvent(long id) {
+        Event existingEvent = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event not found"));
         eventRepository.delete(existingEvent);
     }
 
@@ -105,8 +106,8 @@ public class EventService {
         return eventMapper.toDtoList(events);
     }
 
-    public void addSingleParticipant(String eventTitle, ParticipantDto participantDto) {
-        Event event = eventRepository.findByTitle(eventTitle)
+    public void addSingleParticipant(long id, ParticipantDto participantDto) {
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event not found"));
 
         Participant participant = participantRepository.findByEmail(participantDto.email())
@@ -120,12 +121,12 @@ public class EventService {
     }
 
 
-    public void addParticipantsFromFile(String eventTitle, MultipartFile participantsFile) throws IOException {
+    public void addParticipantsFromFile(long id, MultipartFile participantsFile) throws IOException {
         if (!participantsFile.getContentType().equals("text/csv") &&
                 !participantsFile.getOriginalFilename().endsWith(".csv")) {
             throw new InvalidFileFormatException("Invalid file format. Please upload a CSV file.");
         }
-        Event event = eventRepository.findByTitle(eventTitle).orElseThrow(() -> new EventNotFoundException("Event not found"));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException("Event not found"));
         List<Participant> participants = participantMapper.parseFromCsv(participantsFile);
 
         participantRepository.saveAll(participants);
@@ -133,8 +134,9 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public List<ParticipantDto> getEventParticipants (String eventTitle) {
-        Event event = eventRepository.findByTitle(eventTitle).orElseThrow(() -> new EventNotFoundException("Event not found"));
+    public List<ParticipantDto> getEventParticipants (long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event not found"));
         return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }
 
