@@ -14,6 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"title", "location", "date_time"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +28,7 @@ public class Event implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @NotBlank(message = "Title is required")
     @Size(max = 255, message = "Title must not exceed 255 characters")
     @NonNull
