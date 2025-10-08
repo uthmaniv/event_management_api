@@ -49,11 +49,6 @@ public class Event implements Serializable {
     @NonNull
     private LocalDateTime dateTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_participant",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Participant> participants = new HashSet<>();
 }
