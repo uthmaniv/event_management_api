@@ -6,10 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -44,6 +41,7 @@ public class Participant implements Serializable {
     @NonNull
     private Long phoneNumber;
 
-    @ManyToMany(mappedBy = "participants")
-    private Set<Event> events = new HashSet<>();
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
 }

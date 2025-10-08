@@ -33,9 +33,16 @@ public class EventService {
     }
 
     public void createEvent(EventDto dto) {
-        if (eventRepository.existsByTitle(dto.title())){
-            throw new EventAlreadyExistsException("Event with title '" + dto.title() + "' already exists");
+        boolean exists = eventRepository.existsByTitleAndLocationAndDateTime(
+                dto.title(),
+                dto.location(),
+                dto.dateTime()
+        );
+
+        if (exists) {
+            throw new EventAlreadyExistsException("Event already exists");
         }
+
         eventRepository.save(eventMapper.toEntity(dto));
     }
 
