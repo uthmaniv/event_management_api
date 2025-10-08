@@ -27,10 +27,11 @@ public class EventController {
             summary = "Retrieves all the events added"
     )
     @GetMapping
-    public ResponseEntity<ApiSuccess> getAllEvents() {
+    @ResponseStatus(HttpStatus.OK)
+    public ApiSuccess getAllEvents() {
         List<EventDto> events = eventService.getAllEvents();
 
-        return ResponseEntity.ok(new ApiSuccess("success", events));
+        return new ApiSuccess("success", events);
     }
 
     @Operation(
@@ -38,9 +39,9 @@ public class EventController {
             summary = "Retrieves event for a given title"
     )
     @GetMapping("/title")
-    public ResponseEntity<ApiSuccess> getByTitle(@RequestParam String title) {
-        return ResponseEntity
-                .ok(new ApiSuccess("success", eventService.findByTitle(title)));
+    @ResponseStatus(HttpStatus.OK)
+    public ApiSuccess getByTitle(@RequestParam String title) {
+        return new ApiSuccess("success", eventService.findByTitle(title));
     }
 
     @Operation(
@@ -48,9 +49,9 @@ public class EventController {
             summary = "Retrieves event for a given description"
     )
     @GetMapping("/description")
-    public ResponseEntity<ApiSuccess> getByDescription(@RequestParam String description) {
-        return ResponseEntity
-                .ok(new ApiSuccess("Success", eventService.findByDescription(description)));
+    @ResponseStatus(HttpStatus.OK)
+    public ApiSuccess getByDescription(@RequestParam String description) {
+        return new ApiSuccess("Success", eventService.findByDescription(description));
     }
 
     @Operation(
@@ -58,9 +59,9 @@ public class EventController {
             summary = "Retrieves event for a given location"
     )
     @GetMapping("/location")
-    public ResponseEntity<ApiSuccess> getByLocation(@RequestParam String location) {
-        return ResponseEntity
-                .ok(new ApiSuccess("Success", eventService.findByLocation(location)));
+    @ResponseStatus(HttpStatus.OK)
+    public ApiSuccess getByLocation(@RequestParam String location) {
+        return new ApiSuccess("Success", eventService.findByLocation(location));
     }
 
     @Operation(
@@ -68,28 +69,28 @@ public class EventController {
             summary = "Retrieves all registered participant of a given event"
     )
     @GetMapping("/participants")
-    public ResponseEntity<ApiSuccess> getParticipants(@RequestParam long id) {
-        return ResponseEntity
-                .ok(new ApiSuccess("Success", eventService.getEventParticipants(id)));
+    @ResponseStatus(HttpStatus.OK)
+    public ApiSuccess getParticipants(@RequestParam long id) {
+        return new ApiSuccess("Success", eventService.getEventParticipants(id));
     }
 
     @Operation(
             description = "Create new Event"
     )
     @PostMapping("/add")
-    public ResponseEntity<Void> addEvent(@Valid  @RequestBody EventDto dto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addEvent(@Valid  @RequestBody EventDto dto) {
         eventService.createEvent(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(
             description = "Register a participant to an event"
     )
     @PostMapping("/participants/add")
-    public ResponseEntity<Void> addSingleParticipant(@RequestParam long id,
-                                                     @Valid @RequestBody ParticipantDto dto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addSingleParticipant(@RequestParam long id,
+                                     @Valid @RequestBody ParticipantDto dto) {
         eventService.addSingleParticipant(id,dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(
@@ -97,68 +98,69 @@ public class EventController {
             summary = "Uploads a csv containing list of participants to be registered to an event"
     )
     @PostMapping("/participants/upload")
-    public ResponseEntity<String> uploadParticipants(@RequestParam long id,
-                                                     @RequestParam MultipartFile file) throws IOException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String uploadParticipants(@RequestParam long id,
+                                     @RequestParam MultipartFile file) throws IOException {
         eventService.addParticipantsFromFile(id, file);
-        return ResponseEntity.ok("Participants uploaded successfully");
+        return "Participants uploaded successfully";
     }
 
     @Operation(
             description = "Update Event"
     )
     @PutMapping("/update")
-    public ResponseEntity<Void> updateEvent(@RequestParam long id,
-                                            @Valid @RequestBody EventDto dto) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateEvent(@RequestParam long id,
+                            @Valid @RequestBody EventDto dto) {
         eventService.updateEvent(id, dto);
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event title"
     )
     @PatchMapping("/title")
-    public ResponseEntity<Void> updateTitle(@RequestParam long id,
-                                            @RequestParam String newTitle) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateTitle(@RequestParam long id,
+                            @RequestParam String newTitle) {
         eventService.updateTitle(id, newTitle);
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event description"
     )
     @PatchMapping("/description")
-    public ResponseEntity<Void> updateDescription(@RequestParam long id,
-                                                  @RequestParam String description) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateDescription(@RequestParam long id,
+                                  @RequestParam String description) {
         eventService.updateEventDescription(id, description);
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event location"
     )
     @PatchMapping("/location")
-    public ResponseEntity<Void> updateLocation(@RequestParam long id,
-                                               @RequestParam String location) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateLocation(@RequestParam long id,
+                               @RequestParam String location) {
         eventService.updateEventLocation(id, location);
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Update event time and date"
     )
     @PatchMapping("/date-time")
-    public ResponseEntity<Void> updateTimeStamp(@RequestParam long id,
-                                                @RequestParam LocalDateTime dateTime) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateTimeStamp(@RequestParam long id,
+                                @RequestParam LocalDateTime dateTime) {
         eventService.updateEventDateTime(id,dateTime);
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(
             description = "Delete event"
     )
     @DeleteMapping
-    public ResponseEntity<Void> deleteEvent(@RequestParam long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEvent(@RequestParam long id) {
         eventService.deleteEvent(id);
-        return ResponseEntity.noContent().build();
     }
 }
