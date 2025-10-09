@@ -134,7 +134,7 @@ public class EventService {
             throw new InvalidFileFormatException("Invalid file format. Please upload a CSV file.");
         }
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException("Event not found"));
-        List<Participant> participants = participantMapper.parseFromCsv(participantsFile);
+        List<Participant> participants = participantMapper.parseFromCsv(event,participantsFile);
 
         participantRepository.saveAll(participants);
         event.getParticipants().addAll(participants);

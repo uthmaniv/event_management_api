@@ -49,7 +49,7 @@ public class ParticipantMapper {
         return participantDtoList;
     }
 
-    public List<Participant> parseFromCsv(MultipartFile participantFile) throws IOException {
+    public List<Participant> parseFromCsv(Event event, MultipartFile participantFile) throws IOException {
         List<Participant> participants = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(participantFile.getInputStream()))) {
@@ -65,7 +65,7 @@ public class ParticipantMapper {
                     String email = csvArray[3].trim();
                     Long phone = Long.valueOf(csvArray[4].trim());
 
-                    Participant participant = new Participant(firstName,lastName, email, phone);
+                    Participant participant = new Participant(firstName,lastName, email, phone, event);
                     participants.add(participant);
                 }
             }
