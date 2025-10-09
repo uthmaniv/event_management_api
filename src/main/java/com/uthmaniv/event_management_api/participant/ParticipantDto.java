@@ -19,5 +19,8 @@ public record ParticipantDto (
         String email,
 
         @NotNull(message = "Phone number is required")
-        Long phoneNumber
+        Long phoneNumber,
+
+        @NotNull(message = "Event ID is required")
+        long eventId
 ){}
