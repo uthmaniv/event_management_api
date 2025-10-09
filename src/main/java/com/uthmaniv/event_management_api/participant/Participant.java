@@ -44,4 +44,14 @@ public class Participant implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private InvitationStatus invitationStatus = InvitationStatus.PENDING;
+
+    public enum InvitationStatus {
+        PENDING,
+        ACCEPTED,
+        DECLINED
+    }
 }
