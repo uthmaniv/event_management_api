@@ -236,7 +236,7 @@ public class EventController {
     })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEvent(@RequestParam long id) {
+    public void deleteEvent(@RequestParam  long id) {
         eventService.deleteEvent(id);
     }
 }

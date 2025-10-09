@@ -1,5 +1,9 @@
 package com.uthmaniv.event_management_api.participant;
 
+import com.uthmaniv.event_management_api.event.Event;
+import com.uthmaniv.event_management_api.event.EventRepository;
+import com.uthmaniv.event_management_api.exception.EventNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,14 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class ParticipantMapper {
+    private final EventRepository eventRepository;
 
     public Participant toEntity (ParticipantDto participantDto) {
+        Event event = eventRepository.findById(participantDto.eventId())
+                .orElseThrow(() -> new EventNotFoundException("Event not found"));
         Participant participant = new Participant();
         participant.setFirstName(participantDto.firstName());
         participant.setLastName(participantDto.lastName());
         participant.setEmail(participantDto.email());
         participant.setPhoneNumber(participantDto.phoneNumber());
+        participant.setEvent(event);
 
         return participant;
     }
@@ -25,7 +34,8 @@ public class ParticipantMapper {
                 participant.getFirstName(),
                 participant.getLastName(),
                 participant.getEmail(),
-                participant.getPhoneNumber()
+                participant.getPhoneNumber(),
+                participant.getEvent().getId()
         );
     }
 
