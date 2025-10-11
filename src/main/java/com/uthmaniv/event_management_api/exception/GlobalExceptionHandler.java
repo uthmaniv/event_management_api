@@ -16,18 +16,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EventAlreadyExistsException.class)
-    public ApiError handleEventAlreadyExistsException(EventAlreadyExistsException ex) {
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ApiError handleEventAlreadyExistsException(ResourceAlreadyExistsException ex) {
         return new ApiError(ex.getMessage());
     }
 
-    @ExceptionHandler(ParticipantNotFoundException.class)
-    public  ApiError handleParticipantNotFoundException(ParticipantNotFoundException ex) {
-        return new ApiError(ex.getMessage());
-    }
-
-    @ExceptionHandler(EventNotFoundException.class)
-    public  ApiError handleEventNotFoundException(EventNotFoundException ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public  ApiError handleEventNotFoundException(ResourceNotFoundException ex) {
         return new ApiError(ex.getMessage());
     }
 

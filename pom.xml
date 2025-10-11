@@ -98,6 +98,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>11.13.2</version>
+				<configuration>
+					<url>jdbc:postgresql://localhost:5432/event_db</url>
+					<user>postgres</user>
+					<password>uthmaniv12</password>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
