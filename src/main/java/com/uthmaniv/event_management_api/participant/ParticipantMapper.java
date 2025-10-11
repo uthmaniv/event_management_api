@@ -2,7 +2,7 @@ package com.uthmaniv.event_management_api.participant;
 
 import com.uthmaniv.event_management_api.event.Event;
 import com.uthmaniv.event_management_api.event.EventRepository;
-import com.uthmaniv.event_management_api.exception.EventNotFoundException;
+import com.uthmaniv.event_management_api.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +18,7 @@ public class ParticipantMapper {
 
     public Participant toEntity (ParticipantDto participantDto) {
         Event event = eventRepository.findById(participantDto.eventId())
-                .orElseThrow(() -> new EventNotFoundException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         Participant participant = new Participant();
         participant.setFirstName(participantDto.firstName());
         participant.setLastName(participantDto.lastName());

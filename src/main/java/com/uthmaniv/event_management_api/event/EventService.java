@@ -1,7 +1,7 @@
 package com.uthmaniv.event_management_api.event;
 
-import com.uthmaniv.event_management_api.exception.EventAlreadyExistsException;
-import com.uthmaniv.event_management_api.exception.EventNotFoundException;
+import com.uthmaniv.event_management_api.exception.ResourceAlreadyExistsException;
+import com.uthmaniv.event_management_api.exception.ResourceNotFoundException;
 import com.uthmaniv.event_management_api.exception.InvalidFileFormatException;
 import com.uthmaniv.event_management_api.participant.Participant;
 import com.uthmaniv.event_management_api.participant.ParticipantDto;
@@ -40,7 +40,7 @@ public class EventService {
         );
 
         if (exists) {
-            throw new EventAlreadyExistsException("Event already exists");
+            throw new ResourceAlreadyExistsException("Event already exists");
         }
 
         eventRepository.save(eventMapper.toEntity(dto));
@@ -48,7 +48,7 @@ public class EventService {
 
     public void updateEvent(long id, EventDto dto) {
         Event existingEvent = eventRepository.findById(id)
-                .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         existingEvent.setTitle(dto.title());
         existingEvent.setDescription(dto.description());
         existingEvent.setLocation(dto.location());
@@ -60,28 +60,28 @@ public class EventService {
 
     public void updateEventDescription(long id, String description) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setDescription(description);
         eventRepository.save(event);
     }
 
     public void updateEventLocation(long id, String location) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setLocation(location);
         eventRepository.save(event);
     }
 
     public void updateEventDateTime(long id, LocalDateTime dateTime) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(()-> new EventNotFoundException("Event Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setDateTime(dateTime);
         eventRepository.save(event);
     }
 
     public void updateTitle(long id, String newTitle) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() ->  new EventNotFoundException("Event not found"));
+                .orElseThrow(() ->  new ResourceNotFoundException("Event not found"));
         event.setTitle(newTitle);
 
         eventRepository.save(event);
@@ -89,7 +89,7 @@ public class EventService {
 
     public void deleteEvent(long id) {
         Event existingEvent = eventRepository.findById(id)
-                .orElseThrow(() -> new EventNotFoundException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         eventRepository.delete(existingEvent);
     }
 
@@ -99,23 +99,23 @@ public class EventService {
     }
 
     public EventDto findByTitle(String title) {
-        Event event = eventRepository.findByTitle(title).orElseThrow(() -> new EventNotFoundException("Event not found"));
+        Event event = eventRepository.findByTitle(title).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDto(event);
     }
 
     public EventDto findByDescription(String description) {
-        Event event = eventRepository.findByDescription(description).orElseThrow(() -> new EventNotFoundException("Event not found"));
+        Event event = eventRepository.findByDescription(description).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDto(event);
     }
 
     public List<EventDto> findByLocation(String location) {
-        List<Event> events = eventRepository.findByLocation(location).orElseThrow(() -> new EventNotFoundException("Event not found"));
+        List<Event> events = eventRepository.findByLocation(location).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDtoList(events);
     }
 
     public void addSingleParticipant(long id, ParticipantDto participantDto) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new EventNotFoundException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
         Participant participant = participantRepository.findByEmail(participantDto.email())
                 .orElseGet(() -> {
@@ -133,7 +133,7 @@ public class EventService {
                 !participantsFile.getOriginalFilename().endsWith(".csv")) {
             throw new InvalidFileFormatException("Invalid file format. Please upload a CSV file.");
         }
-        Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException("Event not found"));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         List<Participant> participants = participantMapper.parseFromCsv(event,participantsFile);
 
         participantRepository.saveAll(participants);
@@ -143,7 +143,7 @@ public class EventService {
 
     public List<ParticipantDto> getEventParticipants (long id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new EventNotFoundException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }
 
