@@ -1,0 +1,10 @@
+ALTER TABLE event
+ADD COLUMN user_id INT,
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
+
+UPDATE event
+SET user_id = 1
+WHERE user_id IS NULL;
+
+ALTER TABLE event
+ALTER COLUMN user_id SET NOT NULL;

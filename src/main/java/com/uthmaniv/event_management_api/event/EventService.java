@@ -7,6 +7,9 @@ import com.uthmaniv.event_management_api.participant.Participant;
 import com.uthmaniv.event_management_api.participant.ParticipantDto;
 import com.uthmaniv.event_management_api.participant.ParticipantMapper;
 import com.uthmaniv.event_management_api.participant.ParticipantRepository;
+import com.uthmaniv.event_management_api.user.User;
+import com.uthmaniv.event_management_api.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,22 +18,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final ParticipantMapper participantMapper;
     private final ParticipantRepository participantRepository;
+    private final UserService userService;
 
-    public EventService(EventRepository eventRepository,
-                        EventMapper eventMapper,
-                        ParticipantMapper participantMapper,
-                        ParticipantRepository participantRepository) {
-        this.eventRepository = eventRepository;
-        this.eventMapper = eventMapper;
-        this.participantMapper = participantMapper;
-        this.participantRepository = participantRepository;
-    }
 
     public void createEvent(EventDto dto) {
         boolean exists = eventRepository.existsByTitleAndLocationAndDateTime(
@@ -42,12 +38,14 @@ public class EventService {
         if (exists) {
             throw new ResourceAlreadyExistsException("Event already exists");
         }
-
-        eventRepository.save(eventMapper.toEntity(dto));
+        Event event = eventMapper.toEntity(dto);
+        event.setUser(userService.getCurrentUser());
+        eventRepository.save(event);
     }
 
     public void updateEvent(long id, EventDto dto) {
-        Event existingEvent = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event existingEvent = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         existingEvent.setTitle(dto.title());
         existingEvent.setDescription(dto.description());
@@ -59,28 +57,32 @@ public class EventService {
     }
 
     public void updateEventDescription(long id, String description) {
-        Event event = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setDescription(description);
         eventRepository.save(event);
     }
 
     public void updateEventLocation(long id, String location) {
-        Event event = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setLocation(location);
         eventRepository.save(event);
     }
 
     public void updateEventDateTime(long id, LocalDateTime dateTime) {
-        Event event = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setDateTime(dateTime);
         eventRepository.save(event);
     }
 
     public void updateTitle(long id, String newTitle) {
-        Event event = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() ->  new ResourceNotFoundException("Event not found"));
         event.setTitle(newTitle);
 
@@ -88,33 +90,41 @@ public class EventService {
     }
 
     public void deleteEvent(long id) {
-        Event existingEvent = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event existingEvent = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         eventRepository.delete(existingEvent);
     }
 
     public List<EventDto> getAllEvents(){
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventRepository.findByUserId(userService.getCurrentUser().getId());
         return eventMapper.toDtoList(events);
     }
 
     public EventDto findByTitle(String title) {
-        Event event = eventRepository.findByTitle(title).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByTitleAndUserId(title, user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDto(event);
     }
 
     public EventDto findByDescription(String description) {
-        Event event = eventRepository.findByDescription(description).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByDescriptionAndUserId(description, user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDto(event);
     }
 
     public List<EventDto> findByLocation(String location) {
-        List<Event> events = eventRepository.findByLocation(location).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        User user = userService.getCurrentUser();
+        List<Event> events = eventRepository.findByLocationAndUserId(location, user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDtoList(events);
     }
 
     public void addSingleParticipant(long id, ParticipantDto participantDto) {
-        Event event = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
         Participant participant = participantRepository.findByEmail(participantDto.email())
@@ -133,7 +143,9 @@ public class EventService {
                 !participantsFile.getOriginalFilename().endsWith(".csv")) {
             throw new InvalidFileFormatException("Invalid file format. Please upload a CSV file.");
         }
-        Event event = eventRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         List<Participant> participants = participantMapper.parseFromCsv(event,participantsFile);
 
         participantRepository.saveAll(participants);
@@ -142,7 +154,8 @@ public class EventService {
     }
 
     public List<ParticipantDto> getEventParticipants (long id) {
-        Event event = eventRepository.findById(id)
+        User user = userService.getCurrentUser();
+        Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }

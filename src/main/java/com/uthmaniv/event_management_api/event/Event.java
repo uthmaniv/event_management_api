@@ -1,6 +1,7 @@
 package com.uthmaniv.event_management_api.event;
 
 import com.uthmaniv.event_management_api.participant.Participant;
+import com.uthmaniv.event_management_api.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -54,4 +55,8 @@ public class Event implements Serializable {
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Participant> participants = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
