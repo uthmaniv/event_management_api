@@ -8,11 +8,15 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    Optional<Event> findByTitle(String title);
+    Optional<Event> findByTitleAndUserId(String title, Long userId);
 
-    Optional<Event> findByDescription(String description);
+    Optional<Event> findByDescriptionAndUserId(String description, Long userId);
 
-    Optional<List<Event> >findByLocation(String location);
+    Optional<List<Event> > findByLocationAndUserId(String location, Long userId);
+
+    List<Event> findByUserId(Long userId);
+
+    Optional<Event> findByIdAndUserId(Long id, Long userId);
 
     boolean existsByTitleAndLocationAndDateTime(String title, String location, LocalDateTime dateTime);
 }
