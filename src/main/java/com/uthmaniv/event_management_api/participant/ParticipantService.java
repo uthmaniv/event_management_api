@@ -60,7 +60,7 @@ public class ParticipantService {
         return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }
 
-    public void updateInvitationStatus(long participantId) {
+    public void updateInvitationStatus(long participantId, Participant.InvitationStatus status) {
         User currentUser = userService.getCurrentUser();
         Participant participant = participantRepository.findById(participantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Participant not found"));
@@ -70,7 +70,7 @@ public class ParticipantService {
             throw new ResourceNotFoundException("Participant Not found");
         }
 
-        participant.setInvitationStatus(Participant.InvitationStatus.ACCEPTED);
+        participant.setInvitationStatus(status);
         participantRepository.save(participant);
     }
 
