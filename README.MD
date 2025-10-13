@@ -31,19 +31,17 @@ Eventify is an event management system designed to:
 ## Technologies Used
 - **Spring Boot**: Application framework
 - **Spring Data JPA**: Data persistence layer
-- **H2 Database**: In-memory database
+- **Postgre SQL**: Database
 - **Hibernate**: ORM implementation
 - **SpringDoc OpenAPI**: API documentation (Swagger)
-- **Apache Commons CSV**: CSV file processing
 - **Java JDK 25**: Primary Language
 - **Maven 3.9.11**: Build tool
-- **Jakarta Validation**: Input validation
 
 ## Installation
 
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/acekhalifa/eventify.git
+   git clone https://github.com/uthmaniv/eventify.git
    cd eventify
    ```
 2. **Build the project**
@@ -92,7 +90,7 @@ The API documentation is available at:
 | POST   | /api/participants/upload   | Upload participants file | 201, 400, 404    |
 
 ## Author
-**Anas Yakubu**
+**Usman Yahaya**
 
 - GitHub: [@uthmaniv](https://github.com/uthmaniv)
 - Email: uthmanyahayababa@gmail.com
