@@ -18,10 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -113,23 +110,6 @@ public class EventController {
         PagedResponse<EventDto> pagedResponse = PagedResponse.fromPage(eventPage);
 
         return new ApiSuccess("Success", pagedResponse);
-    }
-
-    @Operation(description = "Get all participants of an event",
-               summary = "Retrieves all registered participant of a given event")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Participants retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = ParticipantDto.class))
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
-    @GetMapping("/participants")
-    @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
-    public ApiSuccess getParticipants(@RequestParam long id) {
-        return new ApiSuccess("Success", participantService.getEventParticipants(id));
     }
 
     @Operation(description = "Create new Event")

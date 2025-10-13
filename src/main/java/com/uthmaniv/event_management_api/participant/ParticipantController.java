@@ -1,6 +1,9 @@
 package com.uthmaniv.event_management_api.participant;
 
+import com.uthmaniv.event_management_api.util.ApiSuccess;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,6 +21,23 @@ public class ParticipantController {
 
     private final ParticipantService participantService;
 
+    @Operation(description = "Get all participants of an event",
+            summary = "Retrieves all registered participant of a given event")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Participants retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = ParticipantDto.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @SecurityRequirement(name = "basicAuth")
+    public ApiSuccess getParticipants(@RequestParam long id) {
+        return new ApiSuccess("Success", participantService.getEventParticipants(id));
+    }
+
     @Operation(description = "Register a participant to an event")
     @ApiResponses(value = {
             @ApiResponse(
@@ -26,7 +46,7 @@ public class ParticipantController {
             ),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "basicAuth")
     public void addSingleParticipant(@RequestParam long id,

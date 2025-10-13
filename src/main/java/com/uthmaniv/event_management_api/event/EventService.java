@@ -2,22 +2,13 @@ package com.uthmaniv.event_management_api.event;
 
 import com.uthmaniv.event_management_api.exception.ResourceAlreadyExistsException;
 import com.uthmaniv.event_management_api.exception.ResourceNotFoundException;
-import com.uthmaniv.event_management_api.exception.InvalidFileFormatException;
-import com.uthmaniv.event_management_api.participant.Participant;
-import com.uthmaniv.event_management_api.participant.ParticipantDto;
-import com.uthmaniv.event_management_api.participant.ParticipantMapper;
-import com.uthmaniv.event_management_api.participant.ParticipantRepository;
 import com.uthmaniv.event_management_api.user.User;
 import com.uthmaniv.event_management_api.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
