@@ -1,6 +1,7 @@
 package com.uthmaniv.event_management_api.event;
 
 import com.uthmaniv.event_management_api.participant.ParticipantDto;
+import com.uthmaniv.event_management_api.participant.ParticipantService;
 import com.uthmaniv.event_management_api.util.ApiSuccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +23,7 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final ParticipantService participantService;
 
     @Operation(description = "Get all events",
                summary = "Retrieves all the events added")
@@ -102,7 +104,7 @@ public class EventController {
     @GetMapping("/participants")
     @ResponseStatus(HttpStatus.OK)
     public ApiSuccess getParticipants(@RequestParam long id) {
-        return new ApiSuccess("Success", eventService.getEventParticipants(id));
+        return new ApiSuccess("Success", participantService.getEventParticipants(id));
     }
 
     @Operation(description = "Create new Event")
@@ -131,7 +133,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addSingleParticipant(@RequestParam long id,
                                      @Valid @RequestBody ParticipantDto dto) {
-        eventService.addSingleParticipant(id,dto);
+        participantService.addSingleParticipant(id,dto);
     }
 
     @Operation(description = "Register multiple participants",
@@ -147,7 +149,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public String uploadParticipants(@RequestParam long id,
                                      @RequestParam MultipartFile file) throws IOException {
-        eventService.addParticipantsFromFile(id, file);
+        participantService.addParticipantsFromFile(id, file);
         return "Participants uploaded successfully";
     }
 

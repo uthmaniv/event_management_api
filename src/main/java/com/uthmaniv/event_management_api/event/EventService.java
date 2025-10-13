@@ -23,8 +23,6 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final ParticipantMapper participantMapper;
-    private final ParticipantRepository participantRepository;
     private final UserService userService;
 
 
@@ -120,44 +118,6 @@ public class EventService {
         List<Event> events = eventRepository.findByLocationAndUserId(location, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
         return eventMapper.toDtoList(events);
-    }
-
-    public void addSingleParticipant(long id, ParticipantDto participantDto) {
-        User user = userService.getCurrentUser();
-        Event event = eventRepository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
-
-        Participant participant = participantRepository.findByEmail(participantDto.email())
-                .orElseGet(() -> {
-                    Participant newParticipant = participantMapper.toEntity(participantDto);
-                    return participantRepository.save(newParticipant);
-                });
-
-        event.getParticipants().add(participant);
-        eventRepository.save(event);
-    }
-
-
-    public void addParticipantsFromFile(long id, MultipartFile participantsFile) throws IOException {
-        if (!participantsFile.getContentType().equals("text/csv") &&
-                !participantsFile.getOriginalFilename().endsWith(".csv")) {
-            throw new InvalidFileFormatException("Invalid file format. Please upload a CSV file.");
-        }
-        User user = userService.getCurrentUser();
-        Event event = eventRepository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
-        List<Participant> participants = participantMapper.parseFromCsv(event,participantsFile);
-
-        participantRepository.saveAll(participants);
-        event.getParticipants().addAll(participants);
-        eventRepository.save(event);
-    }
-
-    public List<ParticipantDto> getEventParticipants (long id) {
-        User user = userService.getCurrentUser();
-        Event event = eventRepository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
-        return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }
 
 }
