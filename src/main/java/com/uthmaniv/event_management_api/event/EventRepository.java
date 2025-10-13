@@ -1,5 +1,7 @@
 package com.uthmaniv.event_management_api.event;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -12,9 +14,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> findByDescriptionAndUserId(String description, Long userId);
 
-    Optional<List<Event> > findByLocationAndUserId(String location, Long userId);
+    Optional<Page<Event> > findByLocationAndUserId(String location, Long userId, Pageable pageable);
 
-    List<Event> findByUserId(Long userId);
+    Page<Event> findByUserId(Long userId, Pageable pageable);
 
     Optional<Event> findByIdAndUserId(Long id, Long userId);
 

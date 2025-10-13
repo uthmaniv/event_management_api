@@ -10,6 +10,8 @@ import com.uthmaniv.event_management_api.participant.ParticipantRepository;
 import com.uthmaniv.event_management_api.user.User;
 import com.uthmaniv.event_management_api.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,9 +96,10 @@ public class EventService {
         eventRepository.delete(existingEvent);
     }
 
-    public List<EventDto> getAllEvents(){
-        List<Event> events = eventRepository.findByUserId(userService.getCurrentUser().getId());
-        return eventMapper.toDtoList(events);
+    public Page<EventDto> getAllEvents(Pageable pageable) {
+        User user = userService.getCurrentUser();
+        Page<Event> events = eventRepository.findByUserId(user.getId(), pageable);
+        return events.map(eventMapper::toDto);
     }
 
     public EventDto findByTitle(String title) {
@@ -113,11 +116,11 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
-    public List<EventDto> findByLocation(String location) {
+    public Page<EventDto> findByLocation(String location, Pageable pageable) {
         User user = userService.getCurrentUser();
-        List<Event> events = eventRepository.findByLocationAndUserId(location, user.getId())
+        Page<Event> events = eventRepository.findByLocationAndUserId(location, user.getId(), pageable)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
-        return eventMapper.toDtoList(events);
+        return events.map(eventMapper::toDto);
     }
 
 }
