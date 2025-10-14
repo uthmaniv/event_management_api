@@ -1,6 +1,7 @@
 package com.uthmaniv.event_management_api.participant;
 
 import com.uthmaniv.event_management_api.event.Event;
+import com.uthmaniv.event_management_api.event.EventMapper;
 import com.uthmaniv.event_management_api.event.EventRepository;
 import com.uthmaniv.event_management_api.exception.InvalidFileFormatException;
 import com.uthmaniv.event_management_api.exception.ResourceNotFoundException;
@@ -22,7 +23,7 @@ public class ParticipantService {
     private final UserService userService;
     private final EventRepository eventRepository;
 
-    public void addSingleParticipant(long id, ParticipantDto participantDto) {
+    public ParticipantDto addSingleParticipant(long id, ParticipantDto participantDto) {
         User user = userService.getCurrentUser();
         Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
@@ -35,10 +36,12 @@ public class ParticipantService {
 
         event.getParticipants().add(participant);
         eventRepository.save(event);
+
+        return participantMapper.toDto(participant);
     }
 
 
-    public void addParticipantsFromFile(long id, MultipartFile participantsFile) throws IOException {
+    public List<ParticipantDto> addParticipantsFromFile(long id, MultipartFile participantsFile) throws IOException {
         if (!participantsFile.getContentType().equals("text/csv") &&
                 !participantsFile.getOriginalFilename().endsWith(".csv")) {
             throw new InvalidFileFormatException("Invalid file format. Please upload a CSV file.");
@@ -51,6 +54,8 @@ public class ParticipantService {
         participantRepository.saveAll(participants);
         event.getParticipants().addAll(participants);
         eventRepository.save(event);
+
+        return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }
 
     public List<ParticipantDto> getEventParticipants (long id) {
@@ -60,7 +65,7 @@ public class ParticipantService {
         return participantMapper.toDtoList(event.getParticipants().stream().toList());
     }
 
-    public void updateInvitationStatus(long participantId, Participant.InvitationStatus status) {
+    public ParticipantDto updateInvitationStatus(long participantId, Participant.InvitationStatus status) {
         User currentUser = userService.getCurrentUser();
         Participant participant = participantRepository.findById(participantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Participant not found"));
@@ -72,6 +77,8 @@ public class ParticipantService {
 
         participant.setInvitationStatus(status);
         participantRepository.save(participant);
+
+        return participantMapper.toDto(participant);
     }
 
 }

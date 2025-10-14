@@ -49,9 +49,9 @@ public class ParticipantController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "basicAuth")
-    public void addSingleParticipant(@RequestParam long id,
+    public ApiSuccess addSingleParticipant(@RequestParam long id,
                                      @Valid @RequestBody ParticipantDto dto) {
-        participantService.addSingleParticipant(id,dto);
+        return new ApiSuccess("Success", participantService.addSingleParticipant(id,dto));
     }
 
     @Operation(description = "Register multiple participants",
@@ -66,10 +66,9 @@ public class ParticipantController {
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "basicAuth")
-    public String uploadParticipants(@RequestParam long id,
+    public ApiSuccess uploadParticipants(@RequestParam long id,
                                      @RequestParam MultipartFile file) throws IOException {
-        participantService.addParticipantsFromFile(id, file);
-        return "Participants uploaded successfully";
+        return new ApiSuccess("Success", participantService.addParticipantsFromFile(id, file));
     }
 
     @Operation(description = "Update participant Invitation status")
@@ -83,8 +82,13 @@ public class ParticipantController {
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
-    public void updateInvitationStatus(@RequestParam long id,
+    public ApiSuccess updateInvitationStatus(@RequestParam long id,
                                        @RequestParam String invitationStatus) {
-       participantService.updateInvitationStatus(id,Enum.valueOf(Participant.InvitationStatus.class,invitationStatus));
+       return new ApiSuccess(
+               "Success",
+               participantService.updateInvitationStatus(
+                       id,Enum.valueOf(Participant.InvitationStatus.class,invitationStatus)
+               )
+       );
     }
 }
