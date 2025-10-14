@@ -116,15 +116,15 @@ public class EventController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Event createad successfully"
+                    description = "Event created successfully"
             ),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "basicAuth")
-    public void addEvent(@Valid  @RequestBody EventDto dto) {
-        eventService.createEvent(dto);
+    public ApiSuccess addEvent(@Valid  @RequestBody EventDto dto) {
+        return new ApiSuccess("success", eventService.createEvent(dto));
     }
 
     @Operation(description = "Update Event")
@@ -136,11 +136,11 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/update")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
-    public void updateEvent(@RequestParam long id,
+    public ApiSuccess updateEvent(@RequestParam long id,
                             @Valid @RequestBody EventDto dto) {
-        eventService.updateEvent(id, dto);
+        return new ApiSuccess("Success", eventService.updateEvent(id, dto));
     }
 
     @Operation(description = "Update event title")
@@ -152,11 +152,11 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PatchMapping("/title")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
-    public void updateTitle(@RequestParam long id,
+    public ApiSuccess updateTitle(@RequestParam long id,
                             @RequestParam String newTitle) {
-        eventService.updateTitle(id, newTitle);
+        return new ApiSuccess("Success", eventService.updateTitle(id, newTitle));
     }
 
     @Operation(description = "Update event description")
@@ -168,11 +168,11 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PatchMapping("/description")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
-    public void updateDescription(@RequestParam long id,
+    public ApiSuccess updateDescription(@RequestParam long id,
                                   @RequestParam String description) {
-        eventService.updateEventDescription(id, description);
+        return new ApiSuccess("success", eventService.updateEventDescription(id, description));
     }
 
     @Operation(description = "Update event location")
@@ -184,11 +184,11 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PatchMapping("/location")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
-    public void updateLocation(@RequestParam long id,
+    public ApiSuccess updateLocation(@RequestParam long id,
                                @RequestParam String location) {
-        eventService.updateEventLocation(id, location);
+        return new ApiSuccess("success", eventService.updateEventLocation(id, location));
     }
 
     @Operation(description = "Update event time and date")
@@ -200,11 +200,11 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PatchMapping("/date-time")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
-    public void updateTimeStamp(@RequestParam long id,
+    public ApiSuccess updateTimeStamp(@RequestParam long id,
                                 @RequestParam LocalDateTime dateTime) {
-        eventService.updateEventDateTime(id,dateTime);
+        return new ApiSuccess("success", eventService.updateEventDateTime(id,dateTime));
     }
 
     @Operation(description = "Delete event")

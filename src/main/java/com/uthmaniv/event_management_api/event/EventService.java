@@ -19,7 +19,7 @@ public class EventService {
     private final UserService userService;
 
 
-    public void createEvent(EventDto dto) {
+    public EventDto createEvent(EventDto dto) {
         boolean exists = eventRepository.existsByTitleAndLocationAndDateTime(
                 dto.title(),
                 dto.location(),
@@ -32,9 +32,11 @@ public class EventService {
         Event event = eventMapper.toEntity(dto);
         event.setUser(userService.getCurrentUser());
         eventRepository.save(event);
+
+        return eventMapper.toDto(event);
     }
 
-    public void updateEvent(long id, EventDto dto) {
+    public EventDto updateEvent(long id, EventDto dto) {
         User user = userService.getCurrentUser();
         Event existingEvent = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
@@ -44,40 +46,47 @@ public class EventService {
         existingEvent.setDateTime(dto.dateTime());
 
         eventRepository.save(existingEvent);
-        eventMapper.toDto(existingEvent);
+        return eventMapper.toDto(existingEvent);
     }
 
-    public void updateEventDescription(long id, String description) {
+    public EventDto updateEventDescription(long id, String description) {
         User user = userService.getCurrentUser();
         Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setDescription(description);
         eventRepository.save(event);
+
+        return eventMapper.toDto(event);
     }
 
-    public void updateEventLocation(long id, String location) {
+    public EventDto updateEventLocation(long id, String location) {
         User user = userService.getCurrentUser();
         Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setLocation(location);
         eventRepository.save(event);
+
+        return eventMapper.toDto(event);
     }
 
-    public void updateEventDateTime(long id, LocalDateTime dateTime) {
+    public EventDto updateEventDateTime(long id, LocalDateTime dateTime) {
         User user = userService.getCurrentUser();
         Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Event Not Found"));
         event.setDateTime(dateTime);
         eventRepository.save(event);
+
+        return eventMapper.toDto(event);
     }
 
-    public void updateTitle(long id, String newTitle) {
+    public EventDto updateTitle(long id, String newTitle) {
         User user = userService.getCurrentUser();
         Event event = eventRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() ->  new ResourceNotFoundException("Event not found"));
         event.setTitle(newTitle);
 
         eventRepository.save(event);
+        return eventMapper.toDto(event);
     }
 
     public void deleteEvent(long id) {
