@@ -13,6 +13,7 @@ import java.io.IOException;
 
 @RestController("api/participants")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "basicAuth")
 public class ParticipantController {
 
     private final ParticipantService participantService;
@@ -21,7 +22,6 @@ public class ParticipantController {
             summary = "Retrieves all registered participant of a given event")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess getParticipants(@RequestParam long id) {
         return new ApiSuccess("Success", participantService.getEventParticipants(id));
     }
@@ -29,7 +29,6 @@ public class ParticipantController {
     @Operation(description = "Register a participant to an event")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess addSingleParticipant(@RequestParam long id,
                                      @Valid @RequestBody ParticipantDto dto) {
         return new ApiSuccess("Success", participantService.addSingleParticipant(id,dto));
@@ -39,7 +38,6 @@ public class ParticipantController {
             summary = "Uploads a csv containing list of participants to be registered to an event")
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.CREATED)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess uploadParticipants(@RequestParam long id,
                                      @RequestParam MultipartFile file) throws IOException {
         return new ApiSuccess("Success", participantService.addParticipantsFromFile(id, file));
@@ -48,7 +46,6 @@ public class ParticipantController {
     @Operation(description = "Update participant Invitation status")
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess updateInvitationStatus(@RequestParam long id,
                                        @RequestParam String invitationStatus) {
        return new ApiSuccess(

@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/events")
+@SecurityRequirement(name = "basicAuth")
 public class EventController {
 
     private final EventService eventService;
@@ -27,7 +28,6 @@ public class EventController {
                summary = "Retrieves all the events added")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess getAllEvents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -44,7 +44,6 @@ public class EventController {
                summary = "Retrieves event for a given title")
     @GetMapping("/title")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess getByTitle(@RequestParam String title) {
         return new ApiSuccess("success", eventService.findByTitle(title));
     }
@@ -53,7 +52,6 @@ public class EventController {
                summary = "Retrieves event for a given description")
     @GetMapping("/description")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess getByDescription(@RequestParam String description) {
         return new ApiSuccess("Success", eventService.findByDescription(description));
     }
@@ -62,7 +60,6 @@ public class EventController {
                summary = "Retrieves event for a given location")
     @GetMapping("/location")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess getByLocation(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -78,7 +75,6 @@ public class EventController {
     @Operation(description = "Create new Event")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess addEvent(@Valid  @RequestBody EventDto dto) {
         return new ApiSuccess("success", eventService.createEvent(dto));
     }
@@ -86,7 +82,6 @@ public class EventController {
     @Operation(description = "Update Event")
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess updateEvent(@RequestParam long id,
                             @Valid @RequestBody EventDto dto) {
         return new ApiSuccess("Success", eventService.updateEvent(id, dto));
@@ -95,7 +90,6 @@ public class EventController {
     @Operation(description = "Update event title")
     @PatchMapping("/title")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess updateTitle(@RequestParam long id,
                             @RequestParam String newTitle) {
         return new ApiSuccess("Success", eventService.updateTitle(id, newTitle));
@@ -104,7 +98,6 @@ public class EventController {
     @Operation(description = "Update event description")
     @PatchMapping("/description")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess updateDescription(@RequestParam long id,
                                   @RequestParam String description) {
         return new ApiSuccess("success", eventService.updateEventDescription(id, description));
@@ -113,7 +106,6 @@ public class EventController {
     @Operation(description = "Update event location")
     @PatchMapping("/location")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess updateLocation(@RequestParam long id,
                                @RequestParam String location) {
         return new ApiSuccess("success", eventService.updateEventLocation(id, location));
@@ -122,7 +114,6 @@ public class EventController {
     @Operation(description = "Update event time and date")
     @PatchMapping("/date-time")
     @ResponseStatus(HttpStatus.OK)
-    @SecurityRequirement(name = "basicAuth")
     public ApiSuccess updateTimeStamp(@RequestParam long id,
                                 @RequestParam LocalDateTime dateTime) {
         return new ApiSuccess("success", eventService.updateEventDateTime(id,dateTime));
@@ -131,7 +122,6 @@ public class EventController {
     @Operation(description = "Delete event")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @SecurityRequirement(name = "basicAuth")
     public void deleteEvent(@RequestParam  long id) {
         eventService.deleteEvent(id);
     }
