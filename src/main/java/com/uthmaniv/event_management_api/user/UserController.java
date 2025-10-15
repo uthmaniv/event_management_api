@@ -18,9 +18,4 @@ public class UserController {
         userService.register(userDto);
     }
 
-    @GetMapping("/demo")
-    @ResponseStatus(HttpStatus.OK)
-    public String hello(){
-        return "HELLO";
-    }
 }

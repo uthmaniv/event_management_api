@@ -1,14 +1,9 @@
 package com.uthmaniv.event_management_api.event;
 
-import com.uthmaniv.event_management_api.participant.ParticipantDto;
 import com.uthmaniv.event_management_api.participant.ParticipantService;
 import com.uthmaniv.event_management_api.util.ApiSuccess;
 import com.uthmaniv.event_management_api.util.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +25,6 @@ public class EventController {
 
     @Operation(description = "Get all events",
                summary = "Retrieves all the events added")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Events retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = EventDto.class))
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -55,14 +42,6 @@ public class EventController {
 
     @Operation(description = "Search event by title",
                summary = "Retrieves event for a given title")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Event retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = EventDto.class))
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @GetMapping("/title")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -72,14 +51,6 @@ public class EventController {
 
     @Operation(description = "Search event by description",
                summary = "Retrieves event for a given description")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Event retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = EventDto.class))
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @GetMapping("/description")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -89,14 +60,6 @@ public class EventController {
 
     @Operation(description = "Search event by location",
                summary = "Retrieves event for a given location")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Event retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = EventDto.class))
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @GetMapping("/location")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -113,13 +76,6 @@ public class EventController {
     }
 
     @Operation(description = "Create new Event")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Event created successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "basicAuth")
@@ -128,13 +84,6 @@ public class EventController {
     }
 
     @Operation(description = "Update Event")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Event updated successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -144,13 +93,6 @@ public class EventController {
     }
 
     @Operation(description = "Update event title")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Event title updated successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PatchMapping("/title")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -160,13 +102,6 @@ public class EventController {
     }
 
     @Operation(description = "Update event description")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Event description updated successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PatchMapping("/description")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -176,13 +111,6 @@ public class EventController {
     }
 
     @Operation(description = "Update event location")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Event location updated successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PatchMapping("/location")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -192,13 +120,6 @@ public class EventController {
     }
 
     @Operation(description = "Update event time and date")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Event date-time updated successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PatchMapping("/date-time")
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "basicAuth")
@@ -208,13 +129,6 @@ public class EventController {
     }
 
     @Operation(description = "Delete event")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Event deleted successfully"
-            ),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @SecurityRequirement(name = "basicAuth")
