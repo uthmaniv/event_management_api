@@ -4,6 +4,7 @@ import com.uthmaniv.event_management_api.exception.ResourceAlreadyExistsExceptio
 import com.uthmaniv.event_management_api.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,13 +12,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public void register(UserDto dto) {
         if (userRepository.existsByUsername(dto.username())){
             throw new ResourceAlreadyExistsException("User Exits");
         }
         User user = new User(dto.username(), dto.password());
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
