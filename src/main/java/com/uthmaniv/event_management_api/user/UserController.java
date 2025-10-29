@@ -1,8 +1,10 @@
 package com.uthmaniv.event_management_api.user;
 
+import com.uthmaniv.event_management_api.util.ApiSuccess;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +18,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@Valid @RequestBody UserDto userDto) {
         userService.register(userDto);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiSuccess getAllUsers() {
+        return new ApiSuccess("success", userService.getAllUsers());
     }
 
 }

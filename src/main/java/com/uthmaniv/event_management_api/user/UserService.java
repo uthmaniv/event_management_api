@@ -7,6 +7,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -27,5 +30,15 @@ public class UserService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not found"));
+    }
+
+    public List<UserResponseDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserResponseDto> userResponseDtos = new ArrayList<>();
+        for (User user : users) {
+            UserResponseDto userDto = new UserResponseDto(user.getUsername(),user.getEvents().size());
+            userResponseDtos.add(userDto);
+        }
+        return userResponseDtos;
     }
 }
