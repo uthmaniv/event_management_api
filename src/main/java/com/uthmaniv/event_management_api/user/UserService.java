@@ -19,7 +19,7 @@ public class UserService {
 
     public void register(UserDto dto) {
         if (userRepository.existsByUsername(dto.username())){
-            throw new ResourceAlreadyExistsException("User Exits");
+            throw new ResourceAlreadyExistsException("User Exists");
         }
         User user = new User(dto.username(), dto.password());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
