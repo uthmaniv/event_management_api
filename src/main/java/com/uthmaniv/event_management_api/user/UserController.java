@@ -34,5 +34,8 @@ public class UserController {
         return ResponseEntity.ok(authentication.getAuthorities());
     }
 
-
+    @GetMapping("/login")
+    public String login (@Valid @RequestBody UserDto userDto) {
+        return userService.verifyUser(userDto);
+    }
 }
